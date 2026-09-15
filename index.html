@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07152b" />
+  <title>Misión Múltiplo — Juego de MCM y MCD</title>
+  <meta name="description" content="Juego interactivo para practicar mínimo común múltiplo y máximo común divisor en segundo de secundaria." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <main class="app" id="app">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Reiniciar Misión Múltiplo"><span class="brand-mark">M²</span><span>MISIÓN MÚLTIPLO</span></a>
+      <div class="top-actions">
+        <button class="icon-btn" id="soundBtn" aria-label="Activar o desactivar sonidos" title="Sonido">♪</button>
+        <button class="icon-btn" id="fullscreenBtn" aria-label="Pantalla completa" title="Pantalla completa">⛶</button>
+      </div>
+    </header>
+
+    <section class="screen active" id="homeScreen">
+      <div class="hero">
+        <p class="eyebrow"><span></span> SABERES Y PENSAMIENTO CIENTÍFICO</p>
+        <h1>La galaxia de los<br><em>números perdidos</em></h1>
+        <p class="intro">Activa los portales usando el <strong>MCM</strong> y el <strong>MCD</strong>. Piensa, acuerda con tu equipo y conquista el marcador.</p>
+        <div class="concepts">
+          <div><b>MCM</b><span>¿Cuándo vuelven a coincidir?</span></div>
+          <div><b>MCD</b><span>¿Cómo repartir sin que sobre?</span></div>
+        </div>
+        <button class="primary" id="startBtn">INICIAR MISIÓN <span>→</span></button>
+        <button class="teacher-link" id="howBtn">¿Cómo se juega?</button>
+      </div>
+      <aside class="planet-card" aria-hidden="true">
+        <div class="orbit orbit-one"><i>12</i></div>
+        <div class="orbit orbit-two"><i>18</i></div>
+        <div class="planet"><span>?</span></div>
+        <div class="mini-card mc1"><small>MÚLTIPLOS</small><b>6, 12, 18…</b></div>
+        <div class="mini-card mc2"><small>DIVISORES</small><b>1, 2, 3, 6</b></div>
+      </aside>
+    </section>
+
+    <section class="screen" id="setupScreen">
+      <div class="panel setup-panel">
+        <p class="eyebrow"><span></span> PREPARACIÓN</p>
+        <h2>Forma tu tripulación</h2>
+        <p>Elijan cuántos equipos jugarán. Cada equipo responde una pregunta por turno.</p>
+        <div class="team-picker" id="teamPicker">
+          <button data-teams="2" class="selected">2 <span>equipos</span></button>
+          <button data-teams="3">3 <span>equipos</span></button>
+          <button data-teams="4">4 <span>equipos</span></button>
+        </div>
+        <div id="teamNames" class="team-names"></div>
+        <button class="primary" id="launchBtn">DESPEGAR <span>🚀</span></button>
+        <button class="back" data-back="homeScreen">← Regresar</button>
+      </div>
+    </section>
+
+    <section class="screen game-screen" id="gameScreen">
+      <div class="scoreboard" id="scoreboard"></div>
+      <div class="game-layout">
+        <section class="question-panel">
+          <div class="question-meta"><span id="roundLabel">RONDA 1</span><span id="progressLabel">1 / 9</span></div>
+          <div class="progress"><i id="progressBar"></i></div>
+          <p class="turn" id="turnLabel">TURNO DEL EQUIPO 1</p>
+          <div class="type-badge" id="typeBadge">MCM O MCD</div>
+          <h2 id="questionText"></h2>
+          <div class="numbers" id="numberDisplay"></div>
+          <div class="answers" id="answers"></div>
+          <p class="hint" id="hintText">💡 Conversen antes de elegir.</p>
+        </section>
+        <aside class="mission-panel">
+          <div class="mission-title"><span>◉</span><div><small>MISIÓN ACTUAL</small><b id="missionName">Detectar la herramienta</b></div></div>
+          <ol id="missionSteps">
+            <li class="active"><b>01</b><span>Distingue MCM y MCD</span></li>
+            <li><b>02</b><span>Calcula el resultado</span></li>
+            <li><b>03</b><span>Resuelve el desafío</span></li>
+          </ol>
+          <div class="teacher-tip"><b>TIP DE LA MISIÓN</b><p id="teacherTip">Si algo vuelve a coincidir, piensa en múltiplos.</p></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="screen" id="resultScreen">
+      <div class="panel result-panel">
+        <div class="trophy">🏆</div>
+        <p class="eyebrow"><span></span> MISIÓN CUMPLIDA</p>
+        <h2 id="winnerTitle">¡Gran trabajo!</h2>
+        <p id="winnerText"></p>
+        <div class="final-scores" id="finalScores"></div>
+        <div class="recap"><b>Bitácora de aprendizaje</b><p>Usamos el <strong>MCM</strong> para encontrar coincidencias y el <strong>MCD</strong> para formar grupos iguales sin sobrantes.</p></div>
+        <button class="primary" id="playAgainBtn">JUGAR DE NUEVO <span>↻</span></button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="modal">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">×</button>
+    <div id="modalContent"></div>
+  </dialog>
+  <script src="game.js"></script>
+</body>
+</html>
