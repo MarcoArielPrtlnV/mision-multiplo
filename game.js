@@ -1,6 +1,6 @@
 const screens=[...document.querySelectorAll('.screen')];
 const $=s=>document.querySelector(s);
-let teamCount=2,teams=[],questions=[],current=0,qIndex=0,soundOn=true,locked=false,tiebreaker=false,tiedTeamIndexes=[],tiebreakTurn=0,timerEnabled=true,timerPaused=false,timeLeft=60,timerId=null,timerWarned=false;
+let teamCount=2,teams=[],questions=[],current=0,qIndex=0,soundOn=true,locked=false,tiebreaker=false,tiedTeamIndexes=[],tiebreakTurn=0,timerEnabled=true,timerPaused=false,timeLeft=60,timerId=null,timerWarned=false,timerStartToken=0;
 
 const questionBank=[
  {round:1,type:'RETO MATEMÁTICO',text:'Dos autobuses salen de la terminal cada 6 y 8 minutos. Si salen juntos ahora, ¿en cuántos minutos volverán a coincidir?',nums:['6 min','8 min'],options:['12 min','24 min','36 min','48 min'],answer:1,why:'MCM(6, 8) = 24. Los autobuses volverán a salir juntos dentro de 24 minutos.',tip:'Calcula el primer múltiplo que comparten ambas frecuencias.'},
@@ -44,7 +44,7 @@ function randomQuestion(){
 
 function show(id){screens.forEach(s=>s.classList.toggle('active',s.id===id));scrollTo({top:0,behavior:'smooth'})}
 function beep(ok=true){if(!soundOn)return;const ctx=new (window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=ok?620:190;g.gain.setValueAtTime(.08,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.25);o.start();o.stop(ctx.currentTime+.25)}
-function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}}
+function stopTimer(){timerStartToken++;if(timerId){clearInterval(timerId);timerId=null}}
 function updateTimerUI(){
  const wrap=$('#timerWrap'),value=$('#timerValue'),pause=$('#timerPauseBtn');
  if(!wrap||!value||!pause)return;
@@ -64,13 +64,17 @@ function startTimerForQuestion(q){
  timeLeft=tiebreaker?60:(q.round===3?90:60);
  updateTimerUI();
  if(!timerEnabled)return;
- timerId=setInterval(()=>{
-  if(timerPaused||locked)return;
-  timeLeft--;
-  if(timeLeft===10&&!timerWarned){timerWarned=true;beep(false)}
-  updateTimerUI();
-  if(timeLeft<=0){stopTimer();timeExpired()}
- },1000);
+ const token=timerStartToken;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  if(token!==timerStartToken||locked)return;
+  timerId=setInterval(()=>{
+   if(timerPaused||locked)return;
+   timeLeft--;
+   if(timeLeft===10&&!timerWarned){timerWarned=true;beep(false)}
+   updateTimerUI();
+   if(timeLeft<=0){stopTimer();timeExpired()}
+  },1000);
+ }));
 }
 function timeExpired(){if(locked)return;answer(null,true)}
 function toggleTimerPause(){if(!timerEnabled||locked)return;timerPaused=!timerPaused;updateTimerUI()}
@@ -92,6 +96,11 @@ function startTiebreaker(winners){tiebreaker=true;tiedTeamIndexes=shuffle(winner
 function nextTiebreakTurn(){document.querySelectorAll('.feedback,.next-btn').forEach(e=>e.remove());tiebreakTurn=(tiebreakTurn+1)%tiedTeamIndexes.length;current=tiedTeamIndexes[tiebreakTurn];questions=[randomQuestion()];qIndex=0;renderQuestion()}
 function showWinner(winner){tiebreaker=false;const max=Math.max(...teams.map(t=>t.score));$('#winnerTitle').textContent=`¡${winner.name} conquista la galaxia!`;$('#winnerText').textContent=`Terminó la misión con ${winner.score} puntos y resolvió el desafío final.`;$('#finalScores').innerHTML=[...teams].sort((a,b)=>b.score-a.score).map(t=>`<div class="final-score ${t===winner?'winner':''}"><b>${t.name}</b><span>${t.score} puntos</span></div>`).join('');show('resultScreen')}
 
-$('#timerToggleBtn').onclick=toggleTimer;$('#timerPauseBtn').onclick=toggleTimerPause;$('#startBtn').onclick=()=>{buildNames();show('setupScreen')};$('#launchBtn').onclick=startGame;$('#playAgainBtn').onclick=()=>{buildNames();show('setupScreen')};document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(b.dataset.back));document.querySelectorAll('#teamPicker button').forEach(b=>b.onclick=()=>{teamCount=+b.dataset.teams;document.querySelectorAll('#teamPicker button').forEach(x=>x.classList.toggle('selected',x===b));buildNames()});$('#howBtn').onclick=()=>{$('#modalContent').innerHTML='<h2>¿Cómo se juega?</h2><ol><li>Forma de <strong>2 a 4 equipos</strong>.</li><li>Cada equipo responde un reto por turno.</li><li>Las rondas 1 y 2 valen <strong>10 puntos</strong>; la final vale <strong>20 puntos</strong>.</li><li>Después de elegir, el juego explica la estrategia.</li></ol><p><strong>Sugerencia docente:</strong> pide que cada equipo justifique su elección antes de hacer clic.</p>';$('#modal').showModal()};$('#modalClose').onclick=()=>$('#modal').close();$('#soundBtn').onclick=()=>{soundOn=!soundOn;$('#soundBtn').textContent=soundOn?'♪':'∅';$('#soundBtn').setAttribute('aria-pressed',String(soundOn))};$('#fullscreenBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
+function showTimeNotice(){
+ const modal=$('#timeNoticeModal');
+ modal.showModal();
+ $('#confirmStartBtn').focus();
+}
+$('#timerToggleBtn').onclick=toggleTimer;$('#timerPauseBtn').onclick=toggleTimerPause;$('#startBtn').onclick=()=>{buildNames();show('setupScreen')};$('#launchBtn').onclick=showTimeNotice;$('#confirmStartBtn').onclick=()=>{$('#timeNoticeModal').close();startGame()};$('#timeNoticeClose').onclick=()=>$('#timeNoticeModal').close();$('#playAgainBtn').onclick=()=>{buildNames();show('setupScreen')};document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>show(b.dataset.back));document.querySelectorAll('#teamPicker button').forEach(b=>b.onclick=()=>{teamCount=+b.dataset.teams;document.querySelectorAll('#teamPicker button').forEach(x=>x.classList.toggle('selected',x===b));buildNames()});$('#howBtn').onclick=()=>{$('#modalContent').innerHTML='<h2>¿Cómo se juega?</h2><ol><li>Forma de <strong>2 a 4 equipos</strong>.</li><li>Cada equipo responde un reto por turno.</li><li>Las rondas 1 y 2 valen <strong>10 puntos</strong>; la final vale <strong>20 puntos</strong>.</li><li>Después de elegir, el juego explica la estrategia.</li></ol><p><strong>Sugerencia docente:</strong> pide que cada equipo justifique su elección antes de hacer clic.</p>';$('#modal').showModal()};$('#modalClose').onclick=()=>$('#modal').close();$('#soundBtn').onclick=()=>{soundOn=!soundOn;$('#soundBtn').textContent=soundOn?'♪':'∅';$('#soundBtn').setAttribute('aria-pressed',String(soundOn))};$('#fullscreenBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();
 document.addEventListener('keydown',e=>{if($('#gameScreen').classList.contains('active')&&!locked&&['1','2','3','4'].includes(e.key)){const b=document.querySelector(`[data-answer="${+e.key-1}"]`);if(b)b.click()}if(e.key==='Enter'&&document.querySelector('.next-btn'))document.querySelector('.next-btn').click()});
 buildNames();updateTimerUI();
