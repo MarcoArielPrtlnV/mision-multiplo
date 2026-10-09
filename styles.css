@@ -19,3 +19,18 @@
 .timer-wrap.disabled .timer-display{border-color:#ffffff25;color:var(--muted)}
 @keyframes timerPulse{to{transform:scale(1.04);box-shadow:0 0 22px #ff6b5f55}}
 @media(max-width:600px){.timer-wrap{justify-content:center;margin:-15px 0 16px}.timer-display{min-width:125px}.timer-control{padding:9px 11px}}
+
+
+/* Aviso de tiempo previo al juego */
+.time-notice-modal{width:min(700px,92%);text-align:center;padding:42px;border:1px solid #27d3df88;background:radial-gradient(circle at 50% 0,#123f5e,#0b1e3a 44%);overflow:hidden}
+.time-notice-icon{width:72px;height:72px;display:grid;place-items:center;margin:0 auto 12px;border-radius:50%;background:var(--cyan);color:var(--navy);font-size:36px;box-shadow:0 0 38px #27d3df55}
+.time-notice-label{margin:0;color:var(--cyan);font-size:11px;font-weight:900;letter-spacing:2px}
+.time-notice-modal h2{margin:10px auto 12px;max-width:560px;font-size:clamp(29px,5vw,43px)}
+.time-notice-modal>p:not(.time-notice-label){margin:0 auto 20px;max-width:590px}
+.round-times{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}
+.round-times div{padding:17px 10px;border:1px solid #ffffff22;border-radius:14px;background:#06162c}
+.round-times span,.round-times small{display:block;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:1px}
+.round-times b{display:block;margin:4px 0;color:var(--yellow);font:700 39px 'Space Grotesk'}
+.time-notice-extra{padding:14px 17px;border-left:3px solid var(--yellow);border-radius:8px;background:#ffd44712;text-align:left}
+.time-notice-modal .primary{width:100%;margin-top:4px}
+@media(max-width:600px){.time-notice-modal{padding:34px 20px}.round-times{gap:7px}.round-times b{font-size:31px}.round-times div{padding:14px 5px}}
