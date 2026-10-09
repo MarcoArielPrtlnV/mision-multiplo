@@ -127,6 +127,20 @@
     <div class="tie-rule">El primer equipo que responda correctamente gana.</div>
     <button class="primary" id="startTiebreakBtn">INICIAR MUERTE SÚBITA <span>→</span></button>
   </dialog>
+  <dialog id="timeNoticeModal" class="time-notice-modal">
+    <button class="modal-close" id="timeNoticeClose" aria-label="Cerrar">×</button>
+    <div class="time-notice-icon" aria-hidden="true">⏱</div>
+    <p class="time-notice-label">ANTES DE DESPEGAR</p>
+    <h2>¡El tiempo también es parte de la misión!</h2>
+    <p>Cada equipo tendrá un tiempo definido para analizar y responder cada problema:</p>
+    <div class="round-times">
+      <div><span>RONDA 1</span><b>60</b><small>segundos</small></div>
+      <div><span>RONDA 2</span><b>60</b><small>segundos</small></div>
+      <div><span>RONDA 3</span><b>90</b><small>segundos</small></div>
+    </div>
+    <p class="time-notice-extra"><strong>Muerte súbita:</strong> 60 segundos por turno. El conteo comenzará cuando la pregunta aparezca en pantalla.</p>
+    <button class="primary" id="confirmStartBtn">ENTENDIDO, INICIAR JUEGO <span>→</span></button>
+  </dialog>
   <script src="game.js"></script>
 </body>
 </html>
