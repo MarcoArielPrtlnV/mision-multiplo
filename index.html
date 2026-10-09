@@ -15,6 +15,7 @@
     <header class="topbar">
       <a class="brand" href="#" aria-label="Reiniciar Misión Múltiplo"><span class="brand-mark">M²</span><span>MISIÓN MÚLTIPLO</span></a>
       <div class="top-actions">
+        <button class="icon-btn" id="timerToggleBtn" aria-label="Activar o desactivar cronómetro" title="Cronómetro activado">⏱</button>
         <button class="icon-btn" id="soundBtn" aria-label="Activar o desactivar sonidos" title="Sonido">♪</button>
         <button class="icon-btn" id="fullscreenBtn" aria-label="Pantalla completa" title="Pantalla completa">⛶</button>
       </div>
@@ -63,6 +64,10 @@
         <section class="question-panel">
           <div class="question-meta"><span id="roundLabel">RONDA 1</span><span id="progressLabel">1 / 9</span></div>
           <div class="progress"><i id="progressBar"></i></div>
+          <div class="timer-wrap" id="timerWrap" aria-live="polite">
+            <div class="timer-display"><span aria-hidden="true">⏱</span><b id="timerValue">60</b><small>SEGUNDOS</small></div>
+            <button class="timer-control" id="timerPauseBtn" type="button">PAUSAR</button>
+          </div>
           <p class="turn" id="turnLabel">TURNO DEL EQUIPO 1</p>
           <div class="type-badge" id="typeBadge">MCM O MCD</div>
           <h2 id="questionText"></h2>
