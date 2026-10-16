@@ -31,7 +31,7 @@ function shuffle(list){
  return copy;
 }
 function prepareQuestions(){
- questions=[1,2,3].flatMap(round=>shuffle(questionBank.filter(q=>q.round===round)).slice(0,3)).map(q=>{
+ questions=[1,2,3].flatMap(round=>shuffle(questionBank.filter(q=>q.round===round)).slice(0,teamCount)).map(q=>{
   const choices=shuffle(q.options.map((text,index)=>({text,correct:index===q.answer})));
   return {...q,options:choices.map(c=>c.text),answer:choices.findIndex(c=>c.correct)};
  });
